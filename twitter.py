@@ -1,9 +1,8 @@
 from twython import Twython, TwythonStreamer
 from py_frog import configuration
-import hashlib
+import uuid
 import time
 
-uniqueKey = hashlib.md5().hexdigest()
 
 twitter = Twython(
     configuration.api_consumer_t,
@@ -13,11 +12,12 @@ twitter = Twython(
 )
 
 
-class MyStreamer(TwythonStreamer):
+class Stream(TwythonStreamer):
     def on_success(self, tweet):
         if 'text' in tweet:
             if tweet['user']['id'] != configuration.twitter_userID:
-                twitter.update_status(status="key: %s // %s" % (uniqueKey, tweet['text']))
+                unique_key = uuid.uuid4()
+                twitter.update_status(status="key: %s // %s" % (unique_key, tweet['text']))
                 print('tweet posted successfully')
                 time.sleep(60)
 
@@ -26,7 +26,7 @@ class MyStreamer(TwythonStreamer):
         stream.statuses.filter(track='lele')
 
 
-stream = MyStreamer(
+stream = Stream(
     configuration.api_consumer_t,
     configuration.api_consumer_s,
     configuration.api_access_t,
