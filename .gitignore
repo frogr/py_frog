@@ -101,4 +101,4 @@ ENV/
 .mypy_cache/
 
 # api
-config.py
+configuration.py
